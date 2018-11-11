@@ -1,18 +1,18 @@
 <template>
   <div id="app">
-    <app-header />
+    <Header />
 
-    <nav class="nav-top section">top nav</nav>
+    <NavMenu class="nav-top section" />
 
     <aside class="aside-bar section">
       <nav class="aside-nav">left nav</nav>
     </aside>
 
     <main class="content section">
-      <MGame />
-      <hr>
-      <Equation />
-      <hr>
+      <!--<MGame />-->
+      <!--<hr>-->
+      <!--<Equation />-->
+      <!--<hr>-->
 
     </main>
     <footer class="footer section">footer</footer>
@@ -21,8 +21,9 @@
 
 <script>
   import Header from './components/Header.vue';
-  import MGame from './components/MemorGame.vue';
-  import Equation from './components/Equation.vue';
+  import MGame from './components/memory-game/MemorGame.vue';
+  import Equation from './components/patterns/Equation.vue';
+  import NavMenu from './components/NavMenu.vue';
 
   export default {
     data: function() {
@@ -33,7 +34,8 @@
     components: {
       Equation,
       MGame,
-      'app-header': Header,
+      Header,
+      NavMenu,
     }
   }
 </script>
@@ -60,7 +62,7 @@
 
     display: grid;
     grid-template-columns: repeat(6, 1fr);
-    grid-template-rows: 50px 30px auto 30px;
+    grid-template-rows: 50px min-content auto 30px;
     grid-gap: 10px;
     grid-template-areas:
       "hd  hd  hd  hd  hd  hd"

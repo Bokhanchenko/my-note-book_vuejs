@@ -2,7 +2,7 @@
   <div class="wrapper">
     <button @click="clearGame" class="btn">restart</button>
     <div v-if="gameOver"
-         class="game-over-baner"
+         class="game-over-banner"
          @click="clearGame">
       <h4>Boom!!))</h4>
     </div>
@@ -82,13 +82,13 @@
           this.firstItem.status = this.STATUS_SELECT
         } else if (!this.secondItem) {
           this.secondItem = this.getItemById(itemId);
-          this.secondItem.status = this.STATUS_SELECT
+          this.secondItem.status = this.STATUS_SELECT;
 
           setTimeout(() => this.confirmOrReject(this.firstItem, this.secondItem), 500)
         }
       },
       confirmOrReject(firstItem, secondItem) {
-        const isTheSame = firstItem.value === secondItem.value
+        const isTheSame = firstItem.value === secondItem.value;
 
         if (isTheSame) {
           this.confirmSelected(firstItem, secondItem)
@@ -111,7 +111,7 @@
         this.secondItem = null;
       },
       clearGame() {
-        this.clearSelected()
+        this.clearSelected();
         this.blocks.forEach(block => block.forEach(item => item.status = this.STATUS_DEFAULT));
       }
     },
@@ -130,7 +130,7 @@
   .row {
     display: flex;
   }
-  .game-over-baner {
+  .game-over-banner {
     display: flex;
     position: absolute;
     top: 0;
