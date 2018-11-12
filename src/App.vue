@@ -2,7 +2,11 @@
   <div id="app">
     <Header />
 
-    <NavMenu class="nav-top section" />
+    <NavMenu
+      class="nav-top section"
+      :navList="navList"
+      >
+    </NavMenu>
 
     <aside class="aside-bar section">
       <nav class="aside-nav">left nav</nav>
@@ -25,10 +29,37 @@
   import Equation from './components/patterns/Equation.vue';
   import NavMenu from './components/NavMenu.vue';
 
+  const user = {
+    id: 0,
+    name: 'test name',
+    lastName: 'test last name',
+    age: 18,
+    role: 'admin',
+  };
+
+  const navList = [
+    {
+      id: 0,
+      title: 'Test title',
+      asideList: [
+        {
+          id: 11,
+          title: 'aside list item'
+        },
+        {
+          id: 12,
+          title: 'aside list item'
+        }
+      ]
+    }
+  ];
+
   export default {
     data: function() {
       return {
-
+        user,
+        navList,
+        activeNavItem: navList[0].id,
       }
     },
     components: {

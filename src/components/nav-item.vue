@@ -1,15 +1,16 @@
 <template>
-  <div class="wrapper" @click="onClick()">
+  <div>
+    <div class="wrapper" v-on:click="click1">
+      <span class="title">
+        {{ item.title }}
+      </span>
 
-    <span class="title">
-      {{ item.title }}
-    </span>
+      <div class="btn-container" v-if="false">
+        <button class="edit" title="Редагуваты"></button>
+        <button class="remove" title="Видалити"></button>
+      </div>
 
-    <div class="btn-container" v-if="false">
-      <button class="edit" title="Редагуваты"></button>
-      <button class="remove" title="Видалити"></button>
     </div>
-
   </div>
 </template>
 
@@ -20,8 +21,8 @@
       return {}
     },
     methods: {
-      onClick() {
-        console.log(this.item)
+      click1() {
+        this.$emit('clickOn', this.item.id)
       }
     },
     computed: {}
@@ -37,6 +38,9 @@
     min-width: 120px;
     padding: 4px;
     cursor: pointer;
+    &:hover {
+      background-color: aquamarine;
+    }
   }
   .btn-container {
     display: flex;

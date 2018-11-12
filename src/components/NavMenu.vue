@@ -1,10 +1,15 @@
 <template>
   <div class="wrapper">
-    <manu class="menu-list">
-      <li class="menu-item" v-for="item in navList" :key="item.id">
-        <NavItem :item="item" />
+    <menu class="menu-list">
+      <li class="menu-item"
+          v-for="item in navList"
+          :key="item.id">
+        <NavItem
+          :item="item"
+          v-on:click-on="onItemClick()">
+        </NavItem>
       </li>
-    </manu>
+    </menu>
   </div>
 </template>
 
@@ -35,7 +40,10 @@
       }
     },
     methods: {
-
+      onItemClick(data) {
+        debugger
+        console.log('on click', data)
+      }
     },
     computed: {
 
