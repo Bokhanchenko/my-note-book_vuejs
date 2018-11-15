@@ -5,11 +5,20 @@
     <NavMenu
       class="nav-top section"
       :navList="navList"
-      >
+      :activeNavItemId="activeNavItemId"
+      @nav-item-click="setActiveItem($event)">
     </NavMenu>
 
+
     <aside class="aside-bar section">
-      <nav class="aside-nav">left nav</nav>
+      <AsideNavMenu
+        :navList="asideNavMenu"
+        :activeAsideItemId="activeAsideItemId"
+        @nav-item-click="setActiveAsideItem($event)"
+      >
+
+      </AsideNavMenu>
+      <!--<nav class="aside-nav">left nav</nav>-->
     </aside>
 
     <main class="content section">
@@ -24,42 +33,23 @@
 </template>
 
 <script>
+  import db from './miniDb';
+
   import Header from './components/Header.vue';
   import MGame from './components/memory-game/MemorGame.vue';
   import Equation from './components/patterns/Equation.vue';
   import NavMenu from './components/NavMenu.vue';
+  import AsideNavMenu from './components/AsideNavMenu.vue';
 
-  const user = {
-    id: 0,
-    name: 'test name',
-    lastName: 'test last name',
-    age: 18,
-    role: 'admin',
-  };
-
-  const navList = [
-    {
-      id: 0,
-      title: 'Test title',
-      asideList: [
-        {
-          id: 11,
-          title: 'aside list item'
-        },
-        {
-          id: 12,
-          title: 'aside list item'
-        }
-      ]
-    }
-  ];
 
   export default {
     data: function() {
       return {
-        user,
-        navList,
-        activeNavItem: navList[0].id,
+        db,
+        user: db.user,
+        navList: db.navList,
+        activeNavItemId: null,
+        activeAsideItemId: null,
       }
     },
     components: {
@@ -67,6 +57,29 @@
       MGame,
       Header,
       NavMenu,
+      AsideNavMenu,
+    },
+    computed: {
+      asideNavMenu() {
+        const activeNavItem = this.db.navList
+          .find(navItem => {
+            debugger
+            return navItem.id === this.activeAsideItemId
+          });
+
+        return activeNavItem.asideList;
+      }
+    },
+    methods: {
+      setActiveItem(itemId) {
+        this.activeNavItemId = itemId;
+      },
+      setActiveAsideItem(itemId) {
+        this.activeAsideItemId = itemId;
+      }
+    },
+    created() {
+//      console.log(db);
     }
   }
 </script>

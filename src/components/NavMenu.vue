@@ -1,20 +1,23 @@
 <template>
-  <div class="wrapper">
-    <menu class="menu-list">
-      <li class="menu-item"
-          v-for="item in navList"
-          :key="item.id">
-        <NavItem
-          :item="item"
-          v-on:click-on="onItemClick()">
-        </NavItem>
-      </li>
-    </menu>
+  <div>
+    <div class="wrapper">
+      <menu class="menu-list">
+        <li class="menu-item"
+            v-for="item in navList"
+            :key="item.id">
+          <NavItem
+            :item="item"
+            :activeNavItemId="activeNavItemId"
+            @nav-item-click="emitNavItemClick($event)">
+          </NavItem>
+        </li>
+      </menu>
+    </div>
   </div>
 </template>
 
 <script>
-  import NavItem from './nav-item.vue'
+  import NavItem from './NavMenuItem.vue'
 
   const defaultNavList = [
     {
@@ -33,6 +36,10 @@
         default: function() { return defaultNavList },
         required: true,
       },
+      activeNavItemId: {
+        type: Number,
+        default: 0,
+      }
     },
     data() {
       return {
@@ -40,16 +47,15 @@
       }
     },
     methods: {
-      onItemClick(data) {
-        debugger
-        console.log('on click', data)
+      emitNavItemClick(data) {
+        this.$emit('nav-item-click', data)
       }
     },
     computed: {
 
     },
-    created: function() {
-      console.log('navList', this.navList)
+    created() {
+
     }
   }
 </script>

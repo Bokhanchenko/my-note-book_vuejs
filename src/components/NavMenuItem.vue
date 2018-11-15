@@ -1,7 +1,9 @@
 <template>
   <div>
-    <div class="wrapper" v-on:click="click1">
-      <span class="title">
+    <div class="wrapper"
+         @click="emitNavItemClick()">
+      <span class="title"
+            :class="{active: item.id === activeNavItemId}">
         {{ item.title }}
       </span>
 
@@ -16,13 +18,13 @@
 
 <script>
   export default {
-    props: ['item'],
+    props: ['item', 'activeNavItemId'],
     data() {
       return {}
     },
     methods: {
-      click1() {
-        this.$emit('clickOn', this.item.id)
+      emitNavItemClick() {
+        this.$emit('nav-item-click', this.item.id)
       }
     },
     computed: {}
@@ -39,7 +41,7 @@
     padding: 4px;
     cursor: pointer;
     &:hover {
-      background-color: aquamarine;
+
     }
   }
   .btn-container {
@@ -48,5 +50,8 @@
     > button {
       height: 100%;
     }
+  }
+  .active {
+    font-weight: bold;
   }
 </style>
