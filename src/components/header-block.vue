@@ -9,7 +9,7 @@
 </template>
 
 <script>
-  import Clock from './Clock.vue'
+  import Clock from './clock-tablo.vue'
 
   export default {
     data: function () {

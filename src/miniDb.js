@@ -1,10 +1,10 @@
-const user = {
-    id: 0,
-    name: 'test name',
-    lastName: 'test last name',
-    age: 18,
-    role: 'admin'
-  };
+const users = [{
+  id: 0,
+  name: 'admin',
+  lastName: 'test last name',
+  age: 18,
+  role: 'admin'
+}];
 
 const navList = [
     {
@@ -13,11 +13,13 @@ const navList = [
       asideList: [
         {
           id: 0,
-          title: 'routing'
+          title: 'routing',
+          content: 'angular routing'
         },
         {
           id: 1,
-          title: 'components'
+          title: 'components',
+          content: 'angular components'
         }
       ]
     },
@@ -27,11 +29,13 @@ const navList = [
       asideList: [
         {
           id: 1,
-          title: 'redux'
+          title: 'redux',
+          content: 'React redux'
         },
         {
           id: 2,
-          title: 'setState'
+          title: 'setState',
+          content: 'React setState'
         }
       ]
     },
@@ -41,18 +45,29 @@ const navList = [
       asideList: [
         {
           id: 1,
-          title: 'customEvents'
+          title: 'customEvents',
+          content: 'Vue customEvents'
         },
         {
           id: 2,
-          title: 'installation'
+          title: 'installation',
+          content: 'Vue installation'
         }
       ]
     }
   ];
 
+const checkAuth = (userData) => {
+  const { login, password } = userData;
+  const user = users.find(user => user.login === login);
+
+  if (!user || user.password !== password) return Promise.reject(new Error('unknown user'));
+
+  return Promise.resolve(user)
+};
+
 export default {
-  user,
+  user: users[0],
   navList,
 }
 

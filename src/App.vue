@@ -1,6 +1,6 @@
 <template>
   <div id="app">
-    <Header />
+    <Header></Header>
 
     <NavMenu
       class="nav-top section"
@@ -9,16 +9,12 @@
       @nav-item-click="setActiveItem($event)">
     </NavMenu>
 
-
     <aside class="aside-bar section">
       <AsideNavMenu
         :navList="asideNavMenu"
         :activeAsideItemId="activeAsideItemId"
-        @nav-item-click="setActiveAsideItem($event)"
-      >
-
+        @nav-item-click="setActiveAsideItem($event)">
       </AsideNavMenu>
-      <!--<nav class="aside-nav">left nav</nav>-->
     </aside>
 
     <main class="content section">
@@ -27,47 +23,58 @@
       <!--<Equation />-->
       <!--<hr>-->
 
+      <ContentEditable
+        :content="content">
+      </ContentEditable>
     </main>
-    <footer class="footer section">footer</footer>
+
+    <footer class="footer section">Turbo Web Developer Dmitry Kayan</footer>
   </div>
 </template>
 
 <script>
   import db from './miniDb';
 
-  import Header from './components/Header.vue';
   import MGame from './components/memory-game/MemorGame.vue';
-  import Equation from './components/patterns/Equation.vue';
-  import NavMenu from './components/NavMenu.vue';
-  import AsideNavMenu from './components/AsideNavMenu.vue';
+  import EquationCalc from './components/patterns/Equation.vue';
 
+  import Header from './components/header-block.vue';
+  import NavMenu from './components/nav-menu.vue';
+  import AsideNavMenu from './components/nav-aside-menu.vue';
+  import ContentEditable from './components/content-editable.vue';
 
   export default {
+    components: {
+      EquationCalc,
+      MGame,
+      Header,
+      NavMenu,
+      AsideNavMenu,
+      ContentEditable,
+    },
     data: function() {
       return {
         db,
         user: db.user,
         navList: db.navList,
-        activeNavItemId: null,
-        activeAsideItemId: null,
+        activeNavItemId: db.navList[0].id,
+        activeAsideItemId: db.navList[0].asideList[0].id,
       }
-    },
-    components: {
-      Equation,
-      MGame,
-      Header,
-      NavMenu,
-      AsideNavMenu,
     },
     computed: {
       asideNavMenu() {
-        const activeNavItem = this.db.navList
-          .find(navItem => {
-            debugger
-            return navItem.id === this.activeAsideItemId
-          });
+        const { activeNavItemId } = this;
 
-        return activeNavItem.asideList;
+        const asideMenu =  activeNavItemId
+          ? db.navList.find(navItem => navItem.id === activeNavItemId).asideList
+          : db.navList[0].asideList;
+
+        this.activeAsideItemId = asideMenu[0].id;
+
+        return asideMenu
+      },
+      content() {
+        return this.asideNavMenu.find(item => item.id === this.activeAsideItemId).content;
       }
     },
     methods: {
@@ -77,9 +84,6 @@
       setActiveAsideItem(itemId) {
         this.activeAsideItemId = itemId;
       }
-    },
-    created() {
-//      console.log(db);
     }
   }
 </script>
@@ -124,6 +128,8 @@
     .footer {
       grid-area: ft;
       background-color: white;
+      text-align: center;
+      font-size: .6rem;
     }
     .aside-bar {
       grid-area: sd;
@@ -135,6 +141,7 @@
     .content {
       grid-area: ct;
       background-color: white;
+      padding: 8px;
     }
   }
 

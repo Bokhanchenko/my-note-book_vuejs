@@ -17,7 +17,7 @@
 </template>
 
 <script>
-  import NavItem from './NavMenuItem.vue'
+  import NavItem from './nav-menu-item.vue'
 
   const defaultNavList = [
     {

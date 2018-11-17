@@ -17,14 +17,19 @@
 </template>
 
 <script>
+  import NavItem from './nav-menu-item.vue'
+
   export default {
+    components: {
+      NavItem,
+    },
     props: ['navList', 'activeAsideItemId'],
     data() {
       return {}
     },
     methods: {
-      emitNavItemClick($event) {
-        debugger
+      emitNavItemClick(id) {
+        this.$emit('nav-item-click', id)
       }
     },
     computed: {}

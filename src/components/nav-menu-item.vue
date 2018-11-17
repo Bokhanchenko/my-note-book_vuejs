@@ -41,7 +41,8 @@
     padding: 4px;
     cursor: pointer;
     &:hover {
-
+      font-weight: 900;
+      opacity: .6;
     }
   }
   .btn-container {
@@ -52,6 +53,6 @@
     }
   }
   .active {
-    font-weight: bold;
+    font-weight: 900;
   }
 </style>
