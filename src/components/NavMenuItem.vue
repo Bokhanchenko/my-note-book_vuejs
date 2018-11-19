@@ -1,9 +1,12 @@
 <template>
   <div>
-    <div class="wrapper"
-         @click="emitNavItemClick()">
-      <span class="title"
-            :class="{active: item.id === activeNavItemId}">
+    <div
+      class="wrapper"
+      @click="emitNavItemClick()">
+      <span
+        class="title"
+        :class="{active: item.id === activeNavItemId}"
+      >
         {{ item.title }}
       </span>
 
@@ -18,16 +21,19 @@
 
 <script>
   export default {
+    name: 'NavMenuItem',
+
     props: ['item', 'activeNavItemId'],
+
     data() {
       return {}
     },
+
     methods: {
       emitNavItemClick() {
         this.$emit('nav-item-click', this.item.id)
       }
     },
-    computed: {}
   }
 </script>
 
@@ -45,6 +51,7 @@
       opacity: .6;
     }
   }
+
   .btn-container {
     display: flex;
     height: 100%;
@@ -52,6 +59,7 @@
       height: 100%;
     }
   }
+
   .active {
     font-weight: 900;
   }

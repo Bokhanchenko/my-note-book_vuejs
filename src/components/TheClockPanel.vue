@@ -4,11 +4,18 @@
 
 <script>
   export default {
+    name: 'TheClockPanel',
+
     data: function () {
       return {
         time: this.getTime(),
       }
     },
+
+    created: function() {
+      setInterval(() => this.time = this.getTime(), 1000);
+    },
+
     methods: {
       getTime: () => {
         const time = new Date();
@@ -16,14 +23,10 @@
         const minutes = time.getMinutes();
         const seconds = time.getSeconds();
         const formatTime = (num) => (num < 10) ? '0' + num : num;
-        return `${formatTime(hours)}:${formatTime(minutes)}:${formatTime(seconds)}`
+        return `${formatTime(hours)}:${formatTime(minutes)}:${formatTime(seconds)}`;
       }
     },
-    created: function() {
-      setInterval(() => this.time = this.getTime(), 1000 )
-    }
   }
-
 </script>
 
 <style scoped>
@@ -32,8 +35,3 @@
     font-size: 1.8rem;
   }
 </style>
-
-
-
-
-

@@ -1,43 +1,53 @@
 <template>
-  <div id="header" class="section">
-    <clock-tablo></clock-tablo>
+  <div class="header section">
+    <ClockPanel></ClockPanel>
 
     <h1 class="title centered">{{ title }}</h1>
 
-    <div class="logo-box centered" @click="toggleEditMode()">
-      <img src="../assets/logo.png" alt="Vue.js" class="logo">
+    <div
+      class="logo-box centered"
+      @click="toggleEditMode()">
+      <img
+        src="../assets/logo.png"
+        alt="Vue.js"
+        class="logo">
     </div>
   </div>
 </template>
 
 <script>
-  import clockTablo from './clock-tablo.vue'
+  import ClockPanel from './TheClockPanel.vue';
 
   export default {
+    name: 'HeaderBlock',
+
     components: {
-      'clock-tablo': clockTablo,
+      ClockPanel,
     },
+
     props: {
       editMode: {
         type: Boolean,
         default: false,
       }
     },
-    data: function () {
+
+    data() {
       return {
         title: 'My-notebook'
       }
     },
+
     methods: {
       toggleEditMode() {
-        this.$emit('edit-mode-set', !this.editMode)
+        this.$emit('edit-mode-set', !this.editMode);
       }
     }
   }
 </script>
 
 <style scoped lang="scss">
-  #header {
+  .header {
     grid-area: hd;
     display: grid;
     grid-template-columns: repeat(6, 1fr);

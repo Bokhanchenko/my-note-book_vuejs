@@ -1,19 +1,25 @@
 <template>
   <div class="wrapper">
     <button @click="clearGame" class="btn">restart</button>
-    <div v-if="gameOver"
-         class="game-over-banner"
-         @click="clearGame">
-      <h4>Boom!!))</h4>
+    <div
+      class="game-over-banner"
+      v-if="gameOver"
+      @click="clearGame">
+      <h4>
+        Boom!!))
+      </h4>
     </div>
-    <div class="row"
-         v-for="(block, index) in blocks"
-         :key="index">
-      <MemoryItem v-for="item in block"
-                  :key="item.id"
-                  :item="item"
-                  @itemClick="setStatus">
-      </MemoryItem>
+
+    <div
+      class="row"
+      v-for="(block, index) in blocks"
+      :key="index">
+      <MemoryItem
+        v-for="item in block"
+        :key="item.id"
+        :item="item"
+        @itemClick="setStatus"
+      ></MemoryItem>
     </div>
   </div>
 </template>
@@ -22,6 +28,12 @@
   import MemoryItem from './MemoryGameItem'
 
   export default {
+    name: 'MemoryGames',
+
+    components: {
+      MemoryItem,
+    },
+
     data() {
       return {
         firstItem: null,
@@ -57,6 +69,7 @@
         ],
       }
     },
+
     computed: {
       flatList() {
         return this.blocks
@@ -65,17 +78,21 @@
           return acc;
         }, []);
       },
+
       gameOver() {
         return this.flatList.every(this.isConfirmed)
       }
     },
+
     methods: {
       isConfirmed(item) {
         return item.status === this.STATUS_DONE
       },
+
       getItemById(itemId) {
         return this.flatList.find(({ id }) => id === itemId);
       },
+
       setStatus(itemId) {
         if (!this.firstItem) {
           this.firstItem = this.getItemById(itemId);
@@ -87,6 +104,7 @@
           setTimeout(() => this.confirmOrReject(this.firstItem, this.secondItem), 500)
         }
       },
+
       confirmOrReject(firstItem, secondItem) {
         const isTheSame = firstItem.value === secondItem.value;
 
@@ -98,25 +116,26 @@
 
         this.clearSelected()
       },
+
       confirmSelected(firstItem, secondItem) {
         firstItem.status = this.STATUS_DONE;
         secondItem.status = this.STATUS_DONE;
       },
+
       rejectSelected(firstItem, secondItem) {
         firstItem.status = this.STATUS_DEFAULT;
         secondItem.status = this.STATUS_DEFAULT;
       },
+
       clearSelected() {
         this.firstItem = null;
         this.secondItem = null;
       },
+
       clearGame() {
         this.clearSelected();
         this.blocks.forEach(block => block.forEach(item => item.status = this.STATUS_DEFAULT));
       }
-    },
-    components: {
-      MemoryItem,
     }
   }
 </script>
@@ -127,9 +146,11 @@
     flex-direction: column;
     position: relative;
   }
+
   .row {
     display: flex;
   }
+
   .game-over-banner {
     display: flex;
     position: absolute;
@@ -140,9 +161,11 @@
     cursor: pointer;
     background-color: aqua;
   }
+
   h4 {
     margin: auto;
   }
+
   .btn {
     background-color: blue;
     color: white;

@@ -1,16 +1,16 @@
 <template>
   <div class="wrapper" >
-    <textarea class="textarea"
-              v-if="contentLoaded"
-              v-model="contentA"
-              autofocus
-              placeholder="enter text"
-              spellcheck="true">
-
-    </textarea>
-
-    <div class="loading-banner"
-         v-else>
+    <textarea
+      class="textarea"
+      v-if="contentLoaded"
+      v-model="contentA"
+      autofocus
+      placeholder="enter text"
+      spellcheck="true"
+    ></textarea>
+    <div
+      class="loading-banner"
+      v-else>
       Loading...
     </div>
   </div>
@@ -18,33 +18,39 @@
 
 <script>
   export default {
+    name: 'ContentEditable',
+
     props: ['content'],
+
     data() {
       return {
         contentA: 'Loading...',
         contentLoaded: false,
       }
     },
+
+    watch: {
+      content(newVal) {
+        this.contentLoaded = false;
+
+        setTimeout(() => {
+          this.updateContent(newVal);
+        }, 500);
+      }
+    },
+
+    created() {
+      setTimeout(() => {
+        this.updateContent(this.content);
+      }, 500);
+    },
+
     methods: {
-      updateContent(newVal) {
-        this.contentA = this.content;
+      updateContent(newVal = this.content) {
+        this.contentA = newVal;
         this.contentLoaded = true;
       }
     },
-    computed: {
-    },
-    created() {
-      setTimeout(() => {
-        this.updateContent()
-      }, 500);
-
-      this.$watch(() => this.content, (newVal) => {
-        this.contentLoaded = false;
-        setTimeout(() => {
-          this.updateContent(newVal)
-        }, 500);
-      });
-    }
   }
 </script>
 
@@ -55,6 +61,7 @@
     width: 100%;
     position: relative;
   }
+
   .textarea {
     width: 100%;
     height: 100%;
@@ -64,6 +71,7 @@
       outline: none;
     }
   }
+
   .loading-banner {
     display: flex;
     align-items: center;

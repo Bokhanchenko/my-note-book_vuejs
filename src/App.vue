@@ -2,23 +2,22 @@
   <div id="app">
     <Header
       @edit-mode-set="setEditMode($event)"
-      :editMode="editMode">
-
-    </Header>
+      :editMode="editMode"
+    ></Header>
 
     <NavMenu
       class="nav-top section"
       :navList="navList"
       :activeNavItemId="activeNavItemId"
-      @nav-item-click="setActiveItem($event)">
-    </NavMenu>
+      @nav-item-click="setActiveItem($event)"
+    ></NavMenu>
 
     <aside class="aside-bar section">
       <AsideNavMenu
         :navList="asideNavMenu"
         :activeAsideItemId="activeAsideItemId"
-        @nav-item-click="setActiveAsideItem($event)">
-      </AsideNavMenu>
+        @nav-item-click="setActiveAsideItem($event)"
+      ></AsideNavMenu>
     </aside>
 
     <main class="content section">
@@ -27,9 +26,7 @@
       <!--<Equation />-->
       <!--<hr>-->
 
-      <ContentEditable
-        :content="content">
-      </ContentEditable>
+      <ContentEditable :content="content"></ContentEditable>
     </main>
 
     <footer class="footer section">Turbo Web Developer Dmitry Kayan</footer>
@@ -42,12 +39,14 @@
   import MGame from './components/memory-game/MemorGame.vue';
   import EquationCalc from './components/patterns/Equation.vue';
 
-  import Header from './components/header-block.vue';
-  import NavMenu from './components/nav-menu.vue';
-  import AsideNavMenu from './components/nav-aside-menu.vue';
-  import ContentEditable from './components/content-editable.vue';
+  import Header from './components/HeaderBlock.vue';
+  import NavMenu from './components/NavMenu.vue';
+  import AsideNavMenu from './components/NavMenuAside.vue';
+  import ContentEditable from './components/ContentEditable.vue';
 
   export default {
+    name: 'App',
+
     components: {
       EquationCalc,
       MGame,
@@ -56,7 +55,8 @@
       AsideNavMenu,
       ContentEditable,
     },
-    data: function() {
+
+    data() {
       return {
         db,
         user: db.user,
@@ -66,6 +66,7 @@
         editMode: false
       }
     },
+
     computed: {
       asideNavMenu() {
         const { activeNavItemId } = this;
@@ -78,17 +79,21 @@
 
         return asideMenu
       },
+
       content() {
         return this.asideNavMenu.find(item => item.id === this.activeAsideItemId).content;
       }
     },
+
     methods: {
       setActiveItem(itemId) {
         this.activeNavItemId = itemId;
       },
+
       setActiveAsideItem(itemId) {
         this.activeAsideItemId = itemId;
       },
+
       setEditMode(mod) {
         this.editMode = mod;
       }
@@ -130,22 +135,27 @@
       grid-area: nav;
       background-color: white;
     }
+
     .main {
       grid-area: mn;
     }
+
     .footer {
       grid-area: ft;
       background-color: white;
       text-align: center;
       font-size: .6rem;
     }
+
     .aside-bar {
       grid-area: sd;
       background-color: white;
     }
+
     .aside-nav {
       grid-area: sd;
     }
+
     .content {
       grid-area: ct;
       background-color: white;
@@ -184,6 +194,7 @@
   a {
     color: #42b983;
   }
+
   hr {
     margin: 10px 0;
   }
