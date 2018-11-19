@@ -1,6 +1,10 @@
 <template>
   <div id="app">
-    <Header></Header>
+    <Header
+      @edit-mode-set="setEditMode($event)"
+      :editMode="editMode">
+
+    </Header>
 
     <NavMenu
       class="nav-top section"
@@ -59,6 +63,7 @@
         navList: db.navList,
         activeNavItemId: db.navList[0].id,
         activeAsideItemId: db.navList[0].asideList[0].id,
+        editMode: false
       }
     },
     computed: {
@@ -83,6 +88,9 @@
       },
       setActiveAsideItem(itemId) {
         this.activeAsideItemId = itemId;
+      },
+      setEditMode(mod) {
+        this.editMode = mod;
       }
     }
   }

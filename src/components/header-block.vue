@@ -1,24 +1,37 @@
 <template>
   <div id="header" class="section">
-    <app-clock />
+    <clock-tablo></clock-tablo>
+
     <h1 class="title centered">{{ title }}</h1>
-    <div class="logo-box centered">
+
+    <div class="logo-box centered" @click="toggleEditMode()">
       <img src="../assets/logo.png" alt="Vue.js" class="logo">
     </div>
   </div>
 </template>
 
 <script>
-  import Clock from './clock-tablo.vue'
+  import clockTablo from './clock-tablo.vue'
 
   export default {
+    components: {
+      'clock-tablo': clockTablo,
+    },
+    props: {
+      editMode: {
+        type: Boolean,
+        default: false,
+      }
+    },
     data: function () {
       return {
         title: 'My-notebook'
       }
     },
-    components: {
-      'app-clock': Clock,
+    methods: {
+      toggleEditMode() {
+        this.$emit('edit-mode-set', !this.editMode)
+      }
     }
   }
 </script>
@@ -42,6 +55,7 @@
   .logo-box {
     grid-column: 6;
     height: 100%;
+    cursor: pointer;
     .logo {
       height: 100%;
       width: auto;
