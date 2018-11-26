@@ -1,6 +1,9 @@
 <template>
   <div id="app">
-    <Header />
+    <Header
+      @edit-mode-set="setEditMode($event)"
+      :editMode="editMode"
+    />
 
     <NavMenu
       class="nav-top section"
@@ -33,23 +36,26 @@
 <script>
   import db from './miniDb';
 
-  import MGame from './components/memory-game/MemorGame.vue';
-  import EquationCalc from './components/patterns/Equation.vue';
+  // import MGame from './components/memory-game/MemorGame.vue';
+  // import EquationCalc from './components/patterns/Equation.vue';
 
-  import Header from './components/header-block.vue';
-  import NavMenu from './components/nav-menu.vue';
-  import AsideNavMenu from './components/nav-aside-menu.vue';
-  import ContentEditable from './components/content-editable.vue';
+  import Header from './components/HeaderBlock.vue';
+  import NavMenu from './components/NavMenu.vue';
+  import AsideNavMenu from './components/NavMenuAside.vue';
+  import ContentEditable from './components/ContentEditable.vue';
 
   export default {
+    name: 'App',
+
     components: {
-      EquationCalc,
-      MGame,
+      // EquationCalc,
+      // MGame,
       Header,
       NavMenu,
       AsideNavMenu,
       ContentEditable,
     },
+
     data() {
       return {
         db,
@@ -57,6 +63,7 @@
         navList: db.navList,
         activeNavItemId: db.navList[0].id,
         activeAsideItemId: db.navList[0].asideList[0].id,
+        editMode: false
       }
     },
 
@@ -68,10 +75,11 @@
           ? db.navList.find(navItem => navItem.id === activeNavItemId).asideList
           : db.navList[0].asideList;
 
-        this.activeAsideItemId = asideMenu[0].id;
+        this.setActiveAsideItem(asideMenu[0].id);
 
         return asideMenu
       },
+
       content() {
         return this.asideNavMenu.find(item => item.id === this.activeAsideItemId).content;
       }
@@ -81,8 +89,13 @@
       setActiveItem(itemId) {
         this.activeNavItemId = itemId;
       },
+
       setActiveAsideItem(itemId) {
         this.activeAsideItemId = itemId;
+      },
+
+      setEditMode(mod) {
+        this.editMode = mod;
       }
     }
   }
@@ -122,22 +135,27 @@
       grid-area: nav;
       background-color: white;
     }
+
     .main {
       grid-area: mn;
     }
+
     .footer {
       grid-area: ft;
       background-color: white;
       text-align: center;
       font-size: .6rem;
     }
+
     .aside-bar {
       grid-area: sd;
       background-color: white;
     }
+
     .aside-nav {
       grid-area: sd;
     }
+
     .content {
       grid-area: ct;
       background-color: white;
@@ -176,6 +194,7 @@
   a {
     color: #42b983;
   }
+
   hr {
     margin: 10px 0;
   }

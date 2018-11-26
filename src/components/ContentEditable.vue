@@ -6,8 +6,8 @@
       v-model="contentA"
       autofocus
       placeholder="enter text"
-      spellcheck="true">
-    </textarea>
+      spellcheck="true"
+    />
 
     <div
       class="loading-banner"
@@ -19,36 +19,39 @@
 
 <script>
   export default {
+    name: 'ContentEditable',
+
     props: ['content'],
+
     data() {
       return {
         contentA: 'Loading...',
         contentLoaded: false,
       }
     },
-    methods: {
-      updateContent(newVal) {
-        this.contentA = this.content;
-        this.contentLoaded = true;
-      }
-    },
-    computed: {
-    },
-    created() {
-        setTimeout(() => {
-            this.updateContent()
-        }, 500);
-    },
 
     watch: {
-        content() {
+      content(newVal) {
         this.contentLoaded = false;
 
         setTimeout(() => {
-          this.updateContent(newVal)
+          this.updateContent(newVal);
         }, 500);
       }
-    }
+    },
+
+    created() {
+      setTimeout(() => {
+        this.updateContent(this.content);
+      }, 500);
+    },
+
+    methods: {
+      updateContent(newVal = this.content) {
+        this.contentA = newVal;
+        this.contentLoaded = true;
+      }
+    },
   }
 </script>
 
@@ -59,6 +62,7 @@
     width: 100%;
     position: relative;
   }
+
   .textarea {
     width: 100%;
     height: 100%;
@@ -68,6 +72,7 @@
       outline: none;
     }
   }
+
   .loading-banner {
     display: flex;
     align-items: center;

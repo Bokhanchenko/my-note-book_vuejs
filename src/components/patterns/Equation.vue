@@ -4,24 +4,30 @@
       Start Num:
       <input type="text" v-model="startNum">
     </label>
+
     <span>Result: {{ result }}</span>
     <hr>
+
     <label>
       Start Num2:
       <input type="text" v-model="startNum2">
     </label>
+
     <span>Result2: {{ result2 }}</span>
   </div>
 </template>
 
 <script>
   export default {
+    name: 'Equation',
+
     data() {
       return {
         startNum: 5,
         startNum2: 5,
       }
     },
+
     computed: {
       result() {
         const equation =  new Plus(
@@ -38,6 +44,7 @@
 
         return equation.evaluate(this.startNum)
       },
+
       result2() {
         const equation =  new Plus(
           new Multiply(
@@ -54,7 +61,6 @@
         return equation.evaluate({ x: this.startNum2, y: 2 })
       }
     },
-    methods: {}
   }
 
   // x * x + 2 * x + 1
@@ -125,9 +131,4 @@
       return params[this.name]
     }
   }
-
 </script>
-
-<style scoped>
-
-</style>
