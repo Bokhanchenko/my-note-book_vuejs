@@ -1,6 +1,6 @@
 <template>
   <div id="header" class="section">
-    <app-clock />
+    <Clock />
     <h1 class="title centered">{{ title }}</h1>
     <div class="logo-box centered">
       <img src="../assets/logo.png" alt="Vue.js" class="logo">
@@ -12,14 +12,17 @@
   import Clock from './clock-tablo.vue'
 
   export default {
+    name: 'Header',
+
+    components: {
+      Clock,
+    },
+
     data: function () {
       return {
         title: 'My-notebook'
       }
     },
-    components: {
-      'app-clock': Clock,
-    }
   }
 </script>
 

@@ -1,20 +1,20 @@
 <template>
   <div id="app">
-    <Header></Header>
+    <Header />
 
     <NavMenu
       class="nav-top section"
       :navList="navList"
       :activeNavItemId="activeNavItemId"
-      @nav-item-click="setActiveItem($event)">
-    </NavMenu>
+      @nav-item-click="setActiveItem($event)"
+    />
 
     <aside class="aside-bar section">
       <AsideNavMenu
         :navList="asideNavMenu"
         :activeAsideItemId="activeAsideItemId"
-        @nav-item-click="setActiveAsideItem($event)">
-      </AsideNavMenu>
+        @nav-item-click="setActiveAsideItem($event)"
+      />
     </aside>
 
     <main class="content section">
@@ -23,9 +23,7 @@
       <!--<Equation />-->
       <!--<hr>-->
 
-      <ContentEditable
-        :content="content">
-      </ContentEditable>
+      <ContentEditable :content="content" />
     </main>
 
     <footer class="footer section">Turbo Web Developer Dmitry Kayan</footer>
@@ -52,7 +50,7 @@
       AsideNavMenu,
       ContentEditable,
     },
-    data: function() {
+    data() {
       return {
         db,
         user: db.user,
@@ -61,6 +59,7 @@
         activeAsideItemId: db.navList[0].asideList[0].id,
       }
     },
+
     computed: {
       asideNavMenu() {
         const { activeNavItemId } = this;
@@ -77,6 +76,7 @@
         return this.asideNavMenu.find(item => item.id === this.activeAsideItemId).content;
       }
     },
+
     methods: {
       setActiveItem(itemId) {
         this.activeNavItemId = itemId;

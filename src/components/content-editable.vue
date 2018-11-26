@@ -1,16 +1,17 @@
 <template>
   <div class="wrapper" >
-    <textarea class="textarea"
-              v-if="contentLoaded"
-              v-model="contentA"
-              autofocus
-              placeholder="enter text"
-              spellcheck="true">
-
+    <textarea
+      class="textarea"
+      v-if="contentLoaded"
+      v-model="contentA"
+      autofocus
+      placeholder="enter text"
+      spellcheck="true">
     </textarea>
 
-    <div class="loading-banner"
-         v-else>
+    <div
+      class="loading-banner"
+      v-else>
       Loading...
     </div>
   </div>
@@ -34,16 +35,19 @@
     computed: {
     },
     created() {
-      setTimeout(() => {
-        this.updateContent()
-      }, 500);
+        setTimeout(() => {
+            this.updateContent()
+        }, 500);
+    },
 
-      this.$watch(() => this.content, (newVal) => {
+    watch: {
+        content() {
         this.contentLoaded = false;
+
         setTimeout(() => {
           this.updateContent(newVal)
         }, 500);
-      });
+      }
     }
   }
 </script>

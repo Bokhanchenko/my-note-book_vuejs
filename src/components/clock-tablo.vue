@@ -9,6 +9,7 @@
         time: this.getTime(),
       }
     },
+
     methods: {
       getTime: () => {
         const time = new Date();
@@ -19,6 +20,7 @@
         return `${formatTime(hours)}:${formatTime(minutes)}:${formatTime(seconds)}`
       }
     },
+
     created: function() {
       setInterval(() => this.time = this.getTime(), 1000 )
     }
