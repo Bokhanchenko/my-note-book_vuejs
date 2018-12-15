@@ -4,13 +4,8 @@
 
     <h1 class="title centered">My-notebook</h1>
 
-    <div
-      class="logo-box centered"
-      @click="$emit('edit-mode-set')">
-      <img
-        src="../assets/logo.png"
-        alt="Vue.js"
-        class="logo">
+    <div class="logo-box centered" @click="toggleEditMode">
+      <img src="@/assets/logo.png" alt="Vue.js" class="logo">
     </div>
   </div>
 </template>
@@ -25,9 +20,16 @@ export default {
     ClockPanel,
   },
 
-  props: {
-    editMode: Boolean
-  },
+  methods: {
+    toggleEditMode() {
+      const query = Object.assign({}, this.$route.query);
+
+      if (query.editMode) delete query.editMode;
+      else query.editMode = true;
+
+      this.$router.replace({ query })
+    }
+  }
 }
 </script>
 
@@ -51,6 +53,7 @@ export default {
   grid-column: 6;
   height: 100%;
   cursor: pointer;
+
   .logo {
     height: 100%;
     width: auto;

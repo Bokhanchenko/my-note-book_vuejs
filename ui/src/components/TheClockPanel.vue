@@ -6,18 +6,18 @@
   export default {
     name: 'TheClockPanel',
 
-    data: function () {
+    data() {
       return {
         time: this.getTime(),
       }
     },
 
-    created: function() {
+    created() {
       setInterval(() => this.time = this.getTime(), 1000);
     },
 
     methods: {
-      getTime: () => {
+      getTime() {
         const time = new Date();
         const hours = time.getHours();
         const minutes = time.getMinutes();

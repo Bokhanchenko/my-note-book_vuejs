@@ -1,46 +1,30 @@
 <template>
   <div id="app">
-    <Header
-      :editMode="editMode"
-      @edit-mode-set="toggleEditMode"
-    />
+    <Header />
 
-    <NavMenu
-      class="nav-top section"
-      :navList="navList"
-      :activeNavItemId="activeNavItemId"
-      :editMode="editMode"
-      @item-click="setActiveItem"
-    />
-
-    <aside class="aside-bar section">
-      <AsideNavMenu
-        :navList="asideNavMenu"
-        :activeAsideItemId="activeAsideItemId"
+    <div class="nav-top">
+      <NavMenu
+        v-if="user"
+        class="section"
+        :userId="user.id"
         :editMode="editMode"
-        @item-click="setActiveAsideItem"
       />
+    </div>
+
+    <aside class="nav-aside section">
+      <AsideNavMenu :userId="user.id" :editMode="editMode"/>
     </aside>
 
     <main class="content section">
-      <!--<MGame />-->
-      <!--<hr>-->
-      <!--<Equation />-->
-      <!--<hr>-->
-
-      <ContentEditable :content="content" />
+      <ContentEditable :topicId="topicId" />
     </main>
 
-    <footer class="footer section">Turbo Web Developer Dmitry Kayan {{editMode}}</footer>
+    <footer class="footer section">Turbo Web Developer Dmitry Kayan</footer>
   </div>
 </template>
 
 <script>
 import db from "./miniDb";
-
-// import MGame from './components/memory-game/MemorGame.vue';
-// import EquationCalc from './components/patterns/Equation.vue';
-
 import Header from "./components/HeaderBlock.vue";
 import NavMenu from "./components/NavMenu.vue";
 import AsideNavMenu from "./components/NavMenuAside.vue";
@@ -50,8 +34,6 @@ export default {
   name: "App",
 
   components: {
-    // EquationCalc,
-    // MGame,
     Header,
     NavMenu,
     AsideNavMenu,
@@ -60,44 +42,49 @@ export default {
 
   data() {
     return {
-      db,
-      user: db.user,
-      navList: db.navList,
-      activeNavItemId: db.navList[0].id,
-      activeAsideItemId: db.navList[0].asideList[0].id,
-      editMode: false
+      user: null,
     };
   },
 
   computed: {
-    asideNavMenu() {
-      const { activeNavItemId } = this;
-
-      const asideMenu = activeNavItemId
-        ? db.navList.find(navItem => navItem.id === activeNavItemId).asideList
-        : db.navList[0].asideList;
-
-      this.setActiveAsideItem(asideMenu[0].id);
-
-      return asideMenu;
+    editMode() {
+      const mode = this.$route.query.editMode;
+      return mode ? JSON.parse(mode) : false;
     },
 
-    content() {
-      return this.asideNavMenu.find(item => item.id === this.activeAsideItemId).content;
+    topicId() {
+      return Number(this.$route.query.topicId)
     }
   },
 
+  created() {
+    this.clearState();
+    this.loadUser(0)
+  },
+
   methods: {
-    setActiveItem(itemId) {
-      this.activeNavItemId = itemId;
+    saveUserToLocal(user) {
+      localStorage.setItem('user', JSON.stringify(user))
     },
 
-    setActiveAsideItem(itemId) {
-      this.activeAsideItemId = itemId;
+    loadUser(id) {
+      const localUser = localStorage.getItem('user');
+
+      if (localUser) {
+        this.user = JSON.parse(localUser);
+        return Promise.resolve()
+      } else {
+        return db.getUser(id).then(user => {
+          this.user = user;
+          this.saveUserToLocal(this.user)
+        })
+      }
     },
 
-    toggleEditMode() {
-      this.editMode = !this.editMode;
+    clearState() {
+      const newQuery = Object.assign({}, this.$route.query);
+      delete newQuery.editMode;
+      this.$router.replace({ query: newQuery });
     }
   }
 };
@@ -132,45 +119,60 @@ export default {
     "nav nav nav nav nav nav"
     "sd  ct  ct  ct  ct  ct"
     "ft  ft  ft  ft  ft  ft";
+}
 
-  .nav-top {
-    grid-area: nav;
-    background-color: white;
+.nav-top {
+  grid-area: nav;
+  background-color: white;
+  overflow: auto;
+}
+
+.nav-aside {
+  grid-area: sd;
+  background-color: white;
+  overflow: auto;
+
+  &::-webkit-scrollbar {
+    width: 6px;
   }
 
-  .main {
-    grid-area: mn;
+  &::-webkit-scrollbar-track {
+    box-shadow: inset 0 0 5px grey;
+    border-radius: 4px;
   }
 
-  .footer {
-    grid-area: ft;
-    background-color: white;
-    text-align: center;
-    font-size: 0.6rem;
+  &::-webkit-scrollbar-thumb {
+    background: mediumblue;
+    border-radius: 4px;
   }
 
-  .aside-bar {
-    grid-area: sd;
-    background-color: white;
-  }
-
-  .aside-nav {
-    grid-area: sd;
-  }
-
-  .content {
-    grid-area: ct;
-    background-color: white;
-    padding: 8px;
+  &::-webkit-scrollbar-thumb:hover {
+    background: mediumblue;
   }
 }
+
+.main {
+  grid-area: mn;
+}
+
+.footer {
+  grid-area: ft;
+  background-color: white;
+  text-align: center;
+  font-size: 0.6rem;
+}
+
+.content {
+  grid-area: ct;
+  padding: 8px;
+}
+
 
 .section {
   background-color: white;
   border: 2px solid black;
   border-radius: 5px;
   padding: 3px;
-  overflow: auto;
   box-shadow: inset 0 0 10px 1px rgba(0, 0, 0, 0.75);
 }
 
@@ -179,8 +181,7 @@ export default {
   align-self: center;
 }
 
-h1,
-h2 {
+h1, h2 {
   font-weight: normal;
 }
 

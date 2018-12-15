@@ -1,89 +1,146 @@
 <template>
-  <div class="wrapper" >
+  <div class="content" >
+    <div class="loading-banner" v-if="isLoading">Loading...</div>
+    <div class="loading-banner" v-else-if="!Number.isInteger(currentId)">Please select the topic</div>
+
     <textarea
       class="textarea"
-      v-if="contentLoaded"
-      v-model="contentA"
+      v-else
+      v-model="content"
       autofocus
       placeholder="enter text"
       spellcheck="true"
-    />
-
-    <div
-      class="loading-banner"
-      v-else>
-      Loading...
-    </div>
+    ></textarea>
   </div>
 </template>
 
 <script>
-  export default {
-    name: 'ContentEditable',
+import db from '@/miniDb'
 
-    props: ['content'],
+export default {
+  name: 'ContentEditable',
 
-    data() {
-      return {
-        contentA: 'Loading...',
-        contentLoaded: false,
+  props: {
+    topicId: Number
+  },
+
+  data() {
+    return {
+      originContent: '',
+      content: '',
+      currentId: null,
+      isLoading: false,
+      activityInterval: null,
+    }
+  },
+
+  computed: {
+    isChanged() {
+      return this.content !== this.originContent
+    }
+  },
+
+  watch: {
+    topicId(id) {
+      this.checkDiff();
+      this.loadContent(id)
+    },
+
+    isChanged(val) {
+      if (val && !this.activityInterval) this.startActivityInterval();
+    },
+  },
+
+  created() {
+    this.loadContent(this.topicId);
+  },
+
+  beforeDestroy() {
+    if (this.isChanged) this.updateContent();
+    if (this.activityInterval) this.stopActivityInterval();
+  },
+
+  methods: {
+    loadContent(topicId) {
+      this.checkDiff();
+      if (this.activityInterval) this.stopActivityInterval();
+
+      if (!Number.isInteger(topicId)) {
+        this.currentId = null;
+        this.originContent = '';
+        this.content = '';
+        return Promise.resolve();
       }
+
+      this.isLoading = true;
+
+      return db.getTopic(topicId)
+        .then(({ id, content }) => {
+          this.currentId = id;
+          this.originContent = content;
+          this.content = content;
+          this.isLoading = false;
+        })
     },
 
-    watch: {
-      content(newVal) {
-        this.contentLoaded = false;
+    updateContent() {
+      if (!this.currentId || this.isLoading) return null;
 
-        setTimeout(() => {
-          this.updateContent(newVal);
-        }, 500);
-      }
+      return db.updateContent(this.currentId, this.content)
+        .then((successId) => {
+          if (successId) this.originContent = this.content;
+          else console.log('ERROR IN updateContent', successId)
+        })
     },
 
-    created() {
-      setTimeout(() => {
-        this.updateContent(this.content);
-      }, 500);
+    startActivityInterval() {
+      this.activityInterval = setTimeout(this.checkDiff, 5000)
     },
 
-    methods: {
-      updateContent(newVal = this.content) {
-        this.contentA = newVal;
-        this.contentLoaded = true;
-      }
+    checkDiff() {
+      if (!this.isChanged) this.stopActivityInterval();
+      else this.updateContent()
     },
-  }
+
+    stopActivityInterval() {
+      if (!this.activityInterval) return;
+
+      clearTimeout(this.activityInterval);
+      this.activityInterval = null;
+    },
+  },
+}
 </script>
 
 <style scoped lang="scss">
-  .wrapper {
-    display: block;
-    height: 100%;
-    width: 100%;
-    position: relative;
-  }
+.content {
+  display: block;
+  height: 100%;
+  width: 100%;
+  position: relative;
+}
 
-  .textarea {
-    width: 100%;
-    height: 100%;
-    resize: none;
-    border: none;
-    &:focus {
-      outline: none;
-    }
+.textarea {
+  width: 100%;
+  height: 100%;
+  resize: none;
+  border: none;
+  &:focus {
+    outline: none;
   }
+}
 
-  .loading-banner {
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    position: absolute;
-    top: 0;
-    right: 0;
-    bottom: 0;
-    left: 0;
-    color: green;
-    font-size: 1.2rem;
-    font-weight: bold;
-  }
+.loading-banner {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  position: absolute;
+  top: 0;
+  right: 0;
+  bottom: 0;
+  left: 0;
+  color: green;
+  font-size: 1.2rem;
+  font-weight: bold;
+}
 </style>
