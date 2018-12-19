@@ -6,16 +6,16 @@
         :activeId="activeId"
         :editMode="editMode"
         @item-click="setTopic"
-        @remove="onRemove"
+        @remove="emitRemove"
+        @update="emitUpdate"
       />
     </li>
 
-    <NavMenuCreator class="menu-item" v-if="Number.isInteger(articleId)" @create="onCreate" />
+    <NavMenuCreator class="menu-item" v-if="Number.isInteger(articleId)" @create="emitCreate" />
   </menu>
 </template>
 
 <script>
-import db from '@/miniDb'
 import NavItem from './NavMenuItem.vue'
 import NavMenuCreator from './NavMenuCreator'
 
@@ -56,47 +56,53 @@ export default {
     articleId: 'loadTopics'
   },
 
-  methods: {
-    onCreate(title) {
-      db.createTopic(this.articleId, title).then(this.addTopic)
+  sockets: {
+    topicsGet(topics) {
+      this.topics = topics
     },
 
-    addTopic(topic) {
+    topicCreate(topic) {
       this.topics.push(topic);
       this.setTopic(topic.id)
     },
 
-    onRemove(id) {
-      db.removeTopic(id).then(this.removeTopic)
-    },
-
-    removeTopic(id) {
+    topicRemove(id) {
       const index = this.topics.findIndex(topic => topic.id === id);
       if (index > -1) this.topics.splice(index, 1)
     },
 
-    onUpdate({ id, title }) {
-      db.updateTopic(id, title).then(this.updateTopic)
-    },
-
-    updateTopic({ id, title }) {
+    topicUpdate({ id, title }) {
       const topic = this.topics.find(topic => topic.id === id);
       topic.title = title;
-    },
+    }
+  },
 
-    setTopic(topicId) {
-      const query = { ...this.$route.query, topicId };
-      this.$router.push({ query })
-    },
-
+  methods: {
     loadTopics(articleId) {
       if (!Number.isInteger(articleId)) {
         this.topics = [];
         return Promise.resolve();
       }
 
-      return db.getTopics(articleId).then(topics => this.topics = topics)
-    }
+      return this.$socket.emit('topicsGet', articleId);
+    },
+
+    emitCreate(title) {
+      this.$socket.emit('topicCreate', { articleId: this.articleId, title });
+    },
+
+    emitRemove(id) {
+      this.$socket.emit('topicRemove', id);
+    },
+
+    emitUpdate({ id, title }) {
+      this.$socket.emit('topicUpdate', { id, title });
+    },
+
+    setTopic(topicId) {
+      const query = { ...this.$route.query, topicId };
+      this.$router.push({ query })
+    },
   }
 }
 </script>
@@ -110,6 +116,8 @@ export default {
 
 .menu-item {
   margin: 0 4px 0 0;
+  width: 100%;
+
   :last-child {
     margin: 0;
   }

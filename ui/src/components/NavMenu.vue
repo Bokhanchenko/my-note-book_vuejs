@@ -1,13 +1,13 @@
 <template>
-  <menu class="menu-list">
-    <li v-if="articles" class="menu-item" v-for="article in articles" :key="article.id">
+  <menu class="menu-list" v-if="articles">
+    <li class="menu-item" v-for="article in articles" :key="article.id">
       <NavItem
         :item="article"
         :activeId="activeId"
         :editMode="editMode"
         @item-click="setArticle"
-        @remove="onRemove"
-        @update="onUpdate"
+        @remove="emitRemove"
+        @update="emitUpdate"
       />
     </li>
 
@@ -16,7 +16,6 @@
 </template>
 
 <script>
-import db from '@/miniDb'
 import NavItem from './NavMenuItem.vue'
 import NavMenuCreator from './NavMenuCreator'
 
@@ -43,7 +42,7 @@ export default {
   },
 
   created() {
-    this.loadArticles(this.userId)
+    this.emitGetArticles(this.userId)
   },
 
   computed: {
@@ -53,34 +52,20 @@ export default {
   },
 
   watch: {
-    userId: 'loadArticles'
+    userId: 'getArticles'
   },
 
-  methods: {
-    createArticle(title) {
-      db.createArticle(this.userId, title)
-        .then((article) => {
-          this.articles.push(article);
-          this.setArticle(article.id)
-        })
+  sockets: {
+    articleCreate(article) {
+      this.articles.push(article);
+      this.setArticle(article.id)
     },
 
-    loadArticles(userId) {
-      return db.getArticles(userId)
-        .then((articles) => this.articles = articles)
+    articlesGetByUser(articles) {
+      this.articles = articles
     },
 
-    setArticle(id) {
-      const query = { ...this.$route.query, articleId: id };
-      delete query.topicId;
-      this.$router.replace({ query })
-    },
-
-    onRemove(id) {
-      db.removeArticle(id).then(this.removeArticle)
-    },
-
-    removeArticle(id) {
+    articleRemove(id) {
       const index = this.articles.findIndex(article => article.id === id );
       if (index > -1) this.articles.splice(index, 1);
 
@@ -89,15 +74,34 @@ export default {
       }
     },
 
-    onUpdate({ id, title }) {
-      db.updateArticle(id, title)
-        .then(this.updateAticle)
-    },
-
-    updateArticle({ id, title }) {
+    articleUpdate({ id, title }) {
       const article = this.articles.find(article => article.id === id);
       article.title = title;
     }
+  },
+
+  methods: {
+    createArticle(title) {
+      this.$socket.emit('articleCreate', { userId: this.userId, title })
+    },
+
+    emitGetArticles(userId) {
+      this.$socket.emit('articlesGetByUser', { userId });
+    },
+
+    setArticle(id) {
+      const query = { ...this.$route.query, articleId: id };
+      delete query.topicId;
+      this.$router.replace({ query })
+    },
+
+    emitRemove(id) {
+      this.$socket.emit('articleRemove', { id })
+    },
+
+    emitUpdate({ id, title }) {
+      this.$socket.emit('articleUpdate', { id, title });
+    },
   }
 }
 </script>
@@ -112,7 +116,7 @@ export default {
 .menu-item {
   margin: 0 4px 0 0;
 
-  :last-child {
+  &:last-child {
     margin: 0;
   }
 }

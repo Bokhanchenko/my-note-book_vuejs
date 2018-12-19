@@ -11,7 +11,7 @@
       />
     </div>
 
-    <aside class="nav-aside section">
+    <aside class="nav-aside section" v-if="user">
       <AsideNavMenu :userId="user.id" :editMode="editMode"/>
     </aside>
 
@@ -19,12 +19,11 @@
       <ContentEditable :topicId="topicId" />
     </main>
 
-    <footer class="footer section">Turbo Web Developer Dmitry Kayan</footer>
+    <!--<footer class="footer section">Turbo Web Developer Dmitry Kayan</footer>-->
   </div>
 </template>
 
 <script>
-import db from "./miniDb";
 import Header from "./components/HeaderBlock.vue";
 import NavMenu from "./components/NavMenu.vue";
 import AsideNavMenu from "./components/NavMenuAside.vue";
@@ -59,26 +58,36 @@ export default {
 
   created() {
     this.clearState();
-    this.loadUser(0)
+  },
+
+  sockets: {
+    connect() {
+      this.getUser()
+    },
+
+    userGet(user) {
+      this.setUser(user)
+    }
   },
 
   methods: {
-    saveUserToLocal(user) {
-      localStorage.setItem('user', JSON.stringify(user))
-    },
-
-    loadUser(id) {
+    getUser() {
       const localUser = localStorage.getItem('user');
 
-      if (localUser) {
+      if (false && localUser) {
         this.user = JSON.parse(localUser);
-        return Promise.resolve()
       } else {
-        return db.getUser(id).then(user => {
-          this.user = user;
-          this.saveUserToLocal(this.user)
-        })
+        this.$socket.emit('userGet', 7)
       }
+    },
+
+    setUser(user) {
+      this.user = user;
+      this.saveUserToLocal(this.user)
+    },
+
+    saveUserToLocal(user) {
+      localStorage.setItem('user', JSON.stringify(user))
     },
 
     clearState() {
@@ -112,13 +121,13 @@ export default {
 
   display: grid;
   grid-template-columns: repeat(6, 1fr);
-  grid-template-rows: 50px min-content auto 30px;
+  grid-template-rows: 50px min-content auto; //30px;
   grid-gap: 10px;
   grid-template-areas:
     "hd  hd  hd  hd  hd  hd"
     "nav nav nav nav nav nav"
     "sd  ct  ct  ct  ct  ct"
-    "ft  ft  ft  ft  ft  ft";
+    /*"ft  ft  ft  ft  ft  ft";*/
 }
 
 .nav-top {

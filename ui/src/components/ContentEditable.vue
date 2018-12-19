@@ -15,8 +15,6 @@
 </template>
 
 <script>
-import db from '@/miniDb'
-
 export default {
   name: 'ContentEditable',
 
@@ -60,6 +58,19 @@ export default {
     if (this.activityInterval) this.stopActivityInterval();
   },
 
+  sockets: {
+    topicGet({ id, content }) {
+      this.currentId = id;
+      this.originContent = content;
+      this.content = content;
+      this.isLoading = false;
+    },
+
+    topicUpdateContent(successId) {
+      if (successId) this.originContent = this.content;
+    }
+  },
+
   methods: {
     loadContent(topicId) {
       this.checkDiff();
@@ -74,23 +85,13 @@ export default {
 
       this.isLoading = true;
 
-      return db.getTopic(topicId)
-        .then(({ id, content }) => {
-          this.currentId = id;
-          this.originContent = content;
-          this.content = content;
-          this.isLoading = false;
-        })
+      return this.$socket.emit('topicGet', topicId);
     },
 
     updateContent() {
       if (!this.currentId || this.isLoading) return null;
 
-      return db.updateContent(this.currentId, this.content)
-        .then((successId) => {
-          if (successId) this.originContent = this.content;
-          else console.log('ERROR IN updateContent', successId)
-        })
+      this.$socket.emit('topicUpdateContent', { id: this.currentId, content: this.content });
     },
 
     startActivityInterval() {
