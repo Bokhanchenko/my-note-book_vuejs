@@ -5,8 +5,8 @@
     </span>
 
     <div class="btn-container" v-if="editMode">
-      <button class="btn edit" title="Редагуваты" @click="onEdit(item)">E</button>
-      <button class="btn remove" title="Видалити" @click="onRemove(item)">R</button>
+      <button class="btn edit" title="Редагуваты" @click="emitEdit(item, $event)">E</button>
+      <button class="btn remove" title="Видалити" @click="emitRemove(item, $event)">X</button>
     </div>
   </div>
 </template>
@@ -28,12 +28,16 @@ export default {
   },
 
   methods: {
-    onEdit(item) {
+    emitEdit(item, event) {
+      event.stopPropagation();
+
       const newTitle = prompt('Enter the name', item.title);
       if (newTitle) this.$emit('update', { id: item.id, title: newTitle })
     },
 
-    onRemove(item) {
+    emitRemove(item, event) {
+      event.stopPropagation();
+
       const canRemove = confirm(`Are you really want to delete "${item.title}"`);
       if (canRemove) this.$emit('remove', item.id)
     }
@@ -68,9 +72,10 @@ export default {
     height: 16px;
     width: 16px;
     font-size: 0.6rem;
-    border: 1px solid gray;
+    border: 2px solid gray;
     border-radius: 50%;
-    background-color: aqua;
+    background-color: mediumblue;
+    color: white;
     outline: none;
     cursor: pointer;
 

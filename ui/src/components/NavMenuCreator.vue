@@ -1,6 +1,6 @@
 <template>
   <div class="create-nav">
-    <button class="btn" @click="onCreate" :title="`help`">+</button>
+    <button class="btn" @click="onCreate" :title="title">+</button>
   </div>
 </template>
 
@@ -13,7 +13,7 @@ export default {
   },
 
   computed: {
-    help: () => `Create new ${name}`,
+    title() { return `Create new ${this.name}` },
   },
 
   methods: {
@@ -29,7 +29,8 @@ export default {
 .create-nav {
   text-align: center;
   height: 100%;
-  min-width: 120px;
+  min-width: 60px;
+  user-select: none;
 }
 
 .btn {

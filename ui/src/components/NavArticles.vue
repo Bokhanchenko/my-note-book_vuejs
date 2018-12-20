@@ -10,8 +10,9 @@
         @update="emitUpdate"
       />
     </li>
-
-    <NavMenuCreator class="menu-item" @create="createArticle"/>
+    <li>
+      <NavMenuCreator class="menu-item" name="article" @create="createArticle"/>
+    </li>
   </menu>
 </template>
 
@@ -20,7 +21,7 @@ import NavItem from './NavMenuItem.vue'
 import NavMenuCreator from './NavMenuCreator'
 
 export default {
-  name: 'NevMenu',
+  name: 'NevArticles',
 
   components: {
     NavItem,
@@ -111,6 +112,8 @@ export default {
   display: flex;
   align-items: center;
   flex-wrap: wrap;
+  min-height: 26px;
+  padding: 4px 0;
 }
 
 .menu-item {

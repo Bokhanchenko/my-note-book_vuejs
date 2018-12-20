@@ -11,7 +11,14 @@
       />
     </li>
 
-    <NavMenuCreator class="menu-item" v-if="Number.isInteger(articleId)" @create="emitCreate" />
+    <li class="menu-item">
+      <NavMenuCreator
+        class="menu-item"
+        v-if="Number.isInteger(articleId)"
+        name="topic"
+        @create="emitCreate"
+      />
+    </li>
   </menu>
 </template>
 
@@ -20,7 +27,7 @@ import NavItem from './NavMenuItem.vue'
 import NavMenuCreator from './NavMenuCreator'
 
 export default {
-  name: 'NavMenuAside',
+  name: 'NavTopics',
 
   components: {
     NavItem,
@@ -109,9 +116,9 @@ export default {
 
 <style scoped lang="scss">
 .menu-list {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
+  /*display: flex;*/
+  /*flex-direction: column;*/
+  /*align-items: center;*/
 }
 
 .menu-item {

@@ -7,6 +7,16 @@ const socketEvents = (socket) => {
 
     // ============== USERS
 
+    socket.on('userRegistration', async (input) => {
+      const result = await users.createUser(input);
+      socket.emit('userRegistration', result)
+    });
+
+    socket.on('userAuthentication', async (input) => {
+      const result = await users.checkUser(input);
+      socket.emit('userAuthentication', result)
+    });
+
     socket.on('userGet', async (id) => {
       const user = await users.getUser(id);
       socket.emit('userGet', user)

@@ -1,8 +1,8 @@
 <template>
   <div class="header section">
-    <ClockPanel />
+    <Clock />
 
-    <h1 class="title centered">My-notebook</h1>
+    <h1 class="title centered" @click="$emit('logout')">My-notebook</h1>
 
     <div class="logo-box centered" @click="toggleEditMode">
       <img src="@/assets/logo.png" alt="Vue.js" class="logo">
@@ -11,13 +11,13 @@
 </template>
 
 <script>
-import ClockPanel from './TheClockPanel.vue';
+import Clock from './Clock.vue';
 
 export default {
   name: 'HeaderBlock',
 
   components: {
-    ClockPanel,
+    Clock,
   },
 
   methods: {
@@ -37,6 +37,7 @@ export default {
 .header {
   grid-area: hd;
   display: grid;
+  padding: 4px;
   grid-template-columns: repeat(6, 1fr);
   grid-template-rows: 40px;
   background-color: white;
