@@ -14,7 +14,7 @@
       <NavTopics :userId="user.id" :editMode="editMode"/>
     </aside>
 
-    <main class="content section scrollbar shadow">
+    <main class="content section">
       <ContentEditable :topicId="topicId" />
     </main>
   </div>
@@ -126,6 +126,5 @@ export default {
 
 .content {
   grid-area: ct;
-  padding: 8px;
 }
 </style>

@@ -1,10 +1,10 @@
 <template>
-  <div class="content" >
+  <div class="content shadow">
     <div class="loading-banner" v-if="isLoading">Loading...</div>
     <div class="loading-banner" v-else-if="!Number.isInteger(currentId)">Please select the topic</div>
 
     <textarea
-      class="textarea"
+      class="textarea scrollbar"
       v-else
       v-model="content"
       autofocus
@@ -126,6 +126,9 @@ export default {
   height: 100%;
   resize: none;
   border: none;
+  background-color: transparent;
+  padding: 8px;
+
   &:focus {
     outline: none;
   }
