@@ -23,6 +23,7 @@ const routes = [
     name: 'registration',
     component: Registration,
   },
+  { path: '*', redirect: '/' }
 ];
 
 export const router = new VueRouter({

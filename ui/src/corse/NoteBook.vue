@@ -1,6 +1,6 @@
 <template>
   <div class="wrapper">
-    <Header class="scrollbar shadow" @logout="logout"/>
+    <Header class="scrollbar shadow"/>
 
     <div class="nav-top scrollbar section shadow">
       <NavArticles
@@ -68,11 +68,6 @@ export default {
   },
 
   methods: {
-    logout() {
-      localStorage.removeItem('user');
-      this.$router.push('login')
-    },
-
     getUser() {
       const user = localStorage.getItem('user');
 

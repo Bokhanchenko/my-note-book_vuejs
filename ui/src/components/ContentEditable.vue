@@ -4,6 +4,7 @@
     <div class="loading-banner" v-else-if="!Number.isInteger(currentId)">Please select the topic</div>
 
     <textarea
+      id="textarea"
       class="textarea scrollbar"
       v-else
       v-model="content"
@@ -64,6 +65,8 @@ export default {
       this.originContent = content;
       this.content = content;
       this.isLoading = false;
+
+      setTimeout(() => this.setFocus(), 30);
     },
 
     topicUpdateContent(successId) {
@@ -109,6 +112,11 @@ export default {
       clearTimeout(this.activityInterval);
       this.activityInterval = null;
     },
+
+    setFocus() {
+      const textarea = document.getElementById('textarea');
+      textarea.focus()
+    },
   },
 }
 </script>
@@ -146,5 +154,14 @@ export default {
   color: green;
   font-size: 1.2rem;
   font-weight: bold;
+}
+
+.codeflask {
+  background: transparent;
+}
+
+.codeflask__flatten {
+  padding: 0;
+  background-color: transparent;
 }
 </style>
