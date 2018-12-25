@@ -33,7 +33,7 @@ export default {
     Header,
     NavArticles,
     NavTopics,
-    ContentEditable
+    ContentEditable,
   },
 
   data() {

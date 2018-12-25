@@ -1,33 +1,20 @@
 <template>
   <div class="wrapper">
-    <form class="form-wrapper section shadow" name="loginForm" @keypress.enter.prevent="emitLogin">
-      <div class="form-row">
-        <h1 class="title centered block">My-notebook</h1>
-      </div>
-
-      <div class="form-row">
-        <div class="title form-row">Login</div>
-        <input type="text" class="input" v-model="input.login" placeholder="Username" />
-      </div>
-
-      <div class="form-row">
-        <div class="title form-row">Password</div>
-        <input type="password" class="input" v-model="input.password" placeholder="Password" />
-      </div>
-
-      <div class="buttons-container">
-        <button class="btn login" type="button" @click="emitLogin">Log in</button>
-        <button class="btn login" type="button" @click="$router.push('/registration')">Registration</button>
-      </div>
-
-      <div :class="['massage', massage.className]" v-if="massage">
-        {{ massage.text }} {{ massage.userName || '' }}
-      </div>
-    </form>
+    <component
+      :is="formName"
+      v-model="input"
+      :massage="massage"
+      @login="emitLogin"
+      @registration="emitRegistration"
+      @set-form="setForm"
+    />
   </div>
 </template>
 
 <script>
+import LoginForm from '../components/LoginForm.vue'
+import RegistrationForm from '../components/RegistrationForm.vue'
+
 const massages = {
   empty: { text: 'A username and password must be present.', className: 'error' },
   wrong: { text: 'The username and / or password is incorrect.', className: 'error' },
@@ -35,22 +22,38 @@ const massages = {
 };
 
 export default {
-  name: "LoginPage",
+  name: "Login",
+
+  components: {
+    LoginForm,
+    RegistrationForm,
+  },
 
   data() {
     return {
       massage: null,
+      formName: 'LoginForm',
       input: {
         login: '',
         password: '',
+        firstName: '',
+        lastName: '',
       }
     }
   },
 
   sockets: {
+    userRegistration(result) {
+      if (!result || result.error) {
+        this.showMassage('wrong', { text: result.error })
+      } else {
+        this.login(result.user)
+      }
+    },
+
     userAuthentication(result) {
       if (!result || result.error) {
-        this.showMassage('wrong', result)
+        this.showMassage('wrong', { text: result.error })
       } else {
         this.login(result.user)
       }
@@ -58,9 +61,21 @@ export default {
   },
 
   methods: {
-    emitLogin() {
-      if (this.input.login !== '' && this.input.password !== '') {
-        this.$socket.emit('userAuthentication', this.input)
+    setForm(name) {
+      this.formName = name
+    },
+
+    emitLogin(input) {
+      if (input.login !== '' && input.password !== '') {
+        this.$socket.emit('userAuthentication', input)
+      } else {
+        this.showMassage('empty')
+      }
+    },
+
+    emitRegistration(input) {
+      if (input.login !== '' && input.password !== '') {
+        this.$socket.emit('userRegistration', input)
       } else {
         this.showMassage('empty')
       }
@@ -92,7 +107,7 @@ export default {
 }
 </script>
 
-<style scoped lang="scss">
+<style lang="scss">
 .wrapper {
   display: flex;
   width: 100%;
@@ -137,13 +152,13 @@ export default {
   right: 0;
   bottom: 4px;
   font-size: 0.8rem;
+}
 
-  &.error {
-    color: red;
-  }
+.error {
+  color: red;
+}
 
-  &.success {
-    color: mediumblue;
-  }
+.success {
+  color: mediumblue;
 }
 </style>

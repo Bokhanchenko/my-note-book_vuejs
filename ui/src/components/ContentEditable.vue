@@ -4,9 +4,9 @@
     <div class="loading-banner" v-else-if="!Number.isInteger(currentId)">Please select the topic</div>
 
     <textarea
+      v-else
       id="textarea"
       class="textarea scrollbar"
-      v-else
       v-model="content"
       autofocus
       placeholder="enter text"
@@ -36,7 +36,7 @@ export default {
   computed: {
     isChanged() {
       return this.content !== this.originContent
-    }
+    },
   },
 
   watch: {
@@ -115,7 +115,8 @@ export default {
 
     setFocus() {
       const textarea = document.getElementById('textarea');
-      textarea.focus()
+      textarea.focus();
+      textarea.scrollTop = 0
     },
   },
 }
@@ -154,14 +155,5 @@ export default {
   color: green;
   font-size: 1.2rem;
   font-weight: bold;
-}
-
-.codeflask {
-  background: transparent;
-}
-
-.codeflask__flatten {
-  padding: 0;
-  background-color: transparent;
 }
 </style>
