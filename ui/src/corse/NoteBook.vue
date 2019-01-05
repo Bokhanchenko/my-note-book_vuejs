@@ -15,7 +15,7 @@
     </aside>
 
     <main class="content section">
-      <ContentEditable :topicId="topicId" />
+      <router-view :topicId="topicId" />
     </main>
   </div>
 </template>
@@ -24,7 +24,6 @@
 import Header from "../components/HeaderBlock.vue";
 import NavArticles from "../components/NavArticles.vue";
 import NavTopics from "../components/NavTopics.vue";
-import ContentEditable from "../components/ContentEditable.vue";
 
 export default {
   name: "NoteBook",
@@ -33,7 +32,6 @@ export default {
     Header,
     NavArticles,
     NavTopics,
-    ContentEditable,
   },
 
   data() {
