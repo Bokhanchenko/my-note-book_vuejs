@@ -15,7 +15,7 @@
     </aside>
 
     <main class="content section">
-      <router-view :topicId="topicId" />
+      <router-view :topicId="topicId"/>
     </main>
   </div>
 </template>

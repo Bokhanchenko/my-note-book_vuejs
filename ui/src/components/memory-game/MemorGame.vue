@@ -31,6 +31,10 @@
 <script>
 import MemoryItem from "./MemoryGameItem";
 
+const STATUS_DEFAULT = 0;
+const STATUS_SELECT = 1;
+const STATUS_DONE = 2;
+
 export default {
   name: "MemoryGames",
 
@@ -42,9 +46,6 @@ export default {
     return {
       firstItem: null,
       secondItem: null,
-      STATUS_DEFAULT: 0,
-      STATUS_SELECT: 1,
-      STATUS_DONE: 2,
       blocks: [
         [
           { id: 1, value: 1, status: 0 },

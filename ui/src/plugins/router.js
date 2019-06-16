@@ -6,7 +6,7 @@ Vue.use(VueRouter);
 import NoteBook from "../corse/NoteBook";
 import Login from "../corse/Login";
 import Equation from "../components/patterns/Equation";
-import MemorGame from "../components/memory-game/MemorGame";
+import MemoryGame from "../components/memory-game/MemorGame";
 import ContentEditable from "../components/ContentEditable.vue";
 
 const routes = [
@@ -25,7 +25,7 @@ const routes = [
       },
       {
         path: "/memorygame",
-        component: MemorGame
+        component: MemoryGame
       }
     ]
   },
